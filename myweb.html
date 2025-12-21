@@ -1,0 +1,836 @@
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>声景疗愈之旅</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- GSAP 动画库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- 自定义 Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8B7355',
+                        secondary: '#A67C52',
+                        accent: '#D2B48C',
+                        light: '#F5F5DC',
+                        dark: '#3E2723'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'wood-texture': "url('media/images/bk.jpg')",
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: scale(1.05);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+            .bg-blur {
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+            }
+            .audio-visualizer {
+                position: relative;
+                width: 100%;
+                height: 200px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .audio-visualizer .bar {
+                width: 4px;
+                margin: 0 2px;
+                background-color: #8B7355;
+                border-radius: 2px;
+                animation: sound 0ms -800ms linear infinite alternate;
+            }
+            @keyframes sound {
+                0% {
+                    height: 30px;
+                }
+                100% {
+                    height: 100px;
+                }
+            }
+        }
+    </style>
+</head>
+<body class="font-sans overflow-x-hidden">
+    <!-- 页面容器 -->
+    <div id="app" class="relative min-h-screen">
+        <!-- 欢迎页 -->
+        <section id="welcome-page" class="min-h-screen flex flex-col items-center justify-center bg-cover bg-center transition-all duration-1000" style="background-image: url('https://p11-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/1000638414184513552~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&amp;x-expires=1779105389&amp;x-signature=4O%2F1CCzmDrb7Cu0FvyjL%2BlZt7VI%3D');">
+            <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+            <h1 class="text-5xl md:text-7xl font-semibold text-white text-shadow z-10 mb-12 text-center px-4 tracking-wide">声景疗愈之旅</h1>
+            <button id="start-btn" class="bg-accent hover:bg-opacity-90 text-dark font-medium py-3 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 z-10 shadow-lg">
+                即刻启程！
+            </button>
+        </section>
+
+        <!-- 询问页 -->
+        <section id="question-page" class="min-h-screen flex flex-col items-center justify-center bg-cover bg-center transition-all duration-1000 hidden" style="background-image: url('https://p26-doubao-search-sign.byteimg.com/labis/f8605b46bde753afd45f1189e055f6f0~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&amp;x-expires=1779105389&amp;x-signature=d8GnwgumwICW0mdVtoV%2BUKaKA2A%3D');">
+            <div class="absolute inset-0 bg-black bg-opacity-30"></div>
+            <h2 class="text-3xl md:text-4xl font-bold text-white text-shadow z-10 mb-12 text-center px-4">你希望在声景疗愈之旅中收获什么？</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 w-full max-w-3xl px-4 z-10">
+                <!-- 选项1：情绪 -->
+                <div class="option-card card-hover bg-white bg-opacity-70 rounded-lg p-6 border-2 border-transparent hover:border-primary cursor-pointer transition-all duration-300" data-option="emotion">
+                    <div class="flex flex-col items-center">
+                        <div class="w-16 h-16 mb-4 flex items-center justify-center">
+                            <img src="https://p3-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/1842055698829672471~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&amp;x-expires=1779110910&amp;x-signature=kHEMxe3AmT21O2N8OzuMxebIemI%3D" alt="情绪图标" class="w-12 h-12 object-contain">
+                        </div>
+                        <h3 class="text-xl font-medium text-dark text-center">了解和控制情绪</h3>
+                    </div>
+                </div>
+                
+                <!-- 选项2：人际关系 -->
+                <div class="option-card card-hover bg-white bg-opacity-70 rounded-lg p-6 border-2 border-transparent hover:border-primary cursor-pointer transition-all duration-300" data-option="relationship">
+                    <div class="flex flex-col items-center">
+                        <div class="w-16 h-16 mb-4 flex items-center justify-center">
+                            <img src="https://p26-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/2239739004380643342~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&amp;x-expires=1779110910&amp;x-signature=2gNgiDB%2BPKXR657VdBMkMPCuylg%3D" alt="人际关系图标" class="w-12 h-12 object-contain">
+                        </div>
+                        <h3 class="text-xl font-medium text-dark text-center">理解处理人际关系</h3>
+                    </div>
+                </div>
+                
+                <!-- 选项3：生活纷扰 -->
+                <div class="option-card card-hover bg-white bg-opacity-70 rounded-lg p-6 border-2 border-transparent hover:border-primary cursor-pointer transition-all duration-300" data-option="life">
+                    <div class="flex flex-col items-center">
+                        <div class="w-16 h-16 mb-4 flex items-center justify-center">
+                            <img src="https://p11-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/2291548997329223693~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&amp;x-expires=1779110910&amp;x-signature=%2BG9jOPciivly4DlmoBsDF26gpwI%3D" alt="生活纷扰图标" class="w-12 h-12 object-contain">
+                        </div>
+                        <h3 class="text-xl font-medium text-dark text-center">应对生活的纷扰</h3>
+                    </div>
+                </div>
+                
+                <!-- 选项4：自我能量 -->
+                <div class="option-card card-hover bg-white bg-opacity-70 rounded-lg p-6 border-2 border-transparent hover:border-primary cursor-pointer transition-all duration-300" data-option="energy">
+                    <div class="flex flex-col items-center">
+                        <div class="w-16 h-16 mb-4 flex items-center justify-center">
+                            <img src="https://p3-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/2098104194342584322~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&amp;x-expires=1779110909&amp;x-signature=oA%2F%2BPkh%2BpsS97phSwAk9EX4P%2BoE%3D" alt="自我能量图标" class="w-12 h-12 object-contain">
+                        </div>
+                        <h3 class="text-xl font-medium text-dark text-center">提升自我的能量</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="back-to-welcome" class="mt-12 bg-white bg-opacity-20 hover:bg-opacity-30 text-white py-2 px-6 rounded-full transition-all duration-300 z-10 flex items-center">
+                <i class="fa fa-arrow-left mr-2"></i> 返回首页
+            </button>
+        </section>
+
+        <!-- 卡牌页 - 情绪 -->
+        <section id="card-page-emotion" class="min-h-screen flex flex-col items-center justify-center bg-wood-texture bg-cover bg-center transition-all duration-1000 hidden">
+            <h2 class="text-2xl md:text-3xl font-semibold text-white text-shadow z-10 mb-8 text-center px-4">为情绪疗愈选择一张指引卡</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl px-4 z-10">
+                <!-- 卡牌1 -->
+                <div class="card-slot card-hover bg-secondary bg-opacity-80 rounded-lg p-6 border-2 border-dark hover:border-accent cursor-pointer transition-all duration-300 flex flex-col items-center justify-center aspect-[3/4]" data-card="emotion-1">
+                    <div class="w-full h-full flex flex-col items-center justify-center">
+                        <img src="media/images/11c.jpg" alt="情绪卡牌1" class="w-3/4 h-3/4 object-contain mb-4">
+                        <p class="text-white text-lg font-medium" style="font-size: 20px; font-weight: bold;">选择这张卡牌</p>
+                    </div>
+                </div>
+                
+                <!-- 卡牌2 -->
+                <div class="card-slot card-hover bg-secondary bg-opacity-80 rounded-lg p-6 border-2 border-dark hover:border-accent cursor-pointer transition-all duration-300 flex flex-col items-center justify-center aspect-[3/4]" data-card="emotion-2">
+                    <div class="w-full h-full flex flex-col items-center justify-center">
+                        <img src="media/images/12c.jpg" alt="情绪卡牌2" class="w-3/4 h-3/4 object-contain mb-4">
+                        <p class="text-white text-lg font-medium" style="font-size: 20px; font-weight: bold;">选择这张卡牌</p>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="back-to-question mt-12 bg-white bg-opacity-20 hover:bg-opacity-30 text-white py-2 px-6 rounded-full transition-all duration-300 z-10 flex items-center">
+                <i class="fa fa-arrow-left mr-2"></i> 返回
+            </button>
+        </section>
+
+        <!-- 卡牌页 - 人际关系 -->
+        <section id="card-page-relationship" class="min-h-screen flex flex-col items-center justify-center bg-wood-texture bg-cover bg-center transition-all duration-1000 hidden">
+            <h2 class="text-2xl md:text-3xl font-semibold text-white text-shadow z-10 mb-8 text-center px-4">为人际关系选择一张指引卡</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl px-4 z-10">
+                <!-- 卡牌1 -->
+                <div class="card-slot card-hover bg-secondary bg-opacity-80 rounded-lg p-6 border-2 border-dark hover:border-accent cursor-pointer transition-all duration-300 flex flex-col items-center justify-center aspect-[3/4]" data-card="relationship-1">
+                    <div class="w-full h-full flex flex-col items-center justify-center">
+                        <img src="media/images/21c.jpg" alt="人际关系卡牌1" class="w-3/4 h-3/4 object-contain mb-4">
+                        <p class="text-white text-lg font-medium" style="font-size: 20px; font-weight: bold;">选择这张卡牌</p>
+                    </div>
+                </div>
+                
+                <!-- 卡牌2 -->
+                <div class="card-slot card-hover bg-secondary bg-opacity-80 rounded-lg p-6 border-2 border-dark hover:border-accent cursor-pointer transition-all duration-300 flex flex-col items-center justify-center aspect-[3/4]" data-card="relationship-2">
+                    <div class="w-full h-full flex flex-col items-center justify-center">
+                        <img src="media/images/22c.jpg" alt="人际关系卡牌2" class="w-3/4 h-3/4 object-contain mb-4">
+                        <p class="text-white text-lg font-medium" style="font-size: 20px; font-weight: bold;">选择这张卡牌</p>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="back-to-question mt-12 bg-white bg-opacity-20 hover:bg-opacity-30 text-white py-2 px-6 rounded-full transition-all duration-300 z-10 flex items-center">
+                <i class="fa fa-arrow-left mr-2"></i> 返回
+            </button>
+        </section>
+
+        <!-- 卡牌页 - 生活纷扰 -->
+        <section id="card-page-life" class="min-h-screen flex flex-col items-center justify-center bg-wood-texture bg-cover bg-center transition-all duration-1000 hidden">
+            <h2 class="text-2xl md:text-3xl font-semibold text-white text-shadow z-10 mb-8 text-center px-4">为应对生活纷扰选择一张指引卡</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl px-4 z-10">
+                <!-- 卡牌1 -->
+                <div class="card-slot card-hover bg-secondary bg-opacity-80 rounded-lg p-6 border-2 border-dark hover:border-accent cursor-pointer transition-all duration-300 flex flex-col items-center justify-center aspect-[3/4]" data-card="life-1">
+                    <div class="w-full h-full flex flex-col items-center justify-center">
+                        <img src="media/images/31c.jpg" alt="生活纷扰卡牌1" class="w-3/4 h-3/4 object-contain mb-4">
+                        <p class="text-white text-lg font-medium" style="font-weight: bold; font-size: 20px;">选择这张卡牌</p>
+                    </div>
+                </div>
+                
+                <!-- 卡牌2 -->
+                <div class="card-slot card-hover bg-secondary bg-opacity-80 rounded-lg p-6 border-2 border-dark hover:border-accent cursor-pointer transition-all duration-300 flex flex-col items-center justify-center aspect-[3/4]" data-card="life-2">
+                    <div class="w-full h-full flex flex-col items-center justify-center">
+                        <img src="media/images/32c.jpg" alt="生活纷扰卡牌2" class="w-3/4 h-3/4 object-contain mb-4">
+                        <p class="text-white text-lg font-medium" style="font-weight: bold; font-size: 20px;">选择这张卡牌</p>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="back-to-question mt-12 bg-white bg-opacity-20 hover:bg-opacity-30 text-white py-2 px-6 rounded-full transition-all duration-300 z-10 flex items-center">
+                <i class="fa fa-arrow-left mr-2"></i> 返回
+            </button>
+        </section>
+
+        <!-- 卡牌页 - 自我能量 -->
+        <section id="card-page-energy" class="min-h-screen flex flex-col items-center justify-center bg-wood-texture bg-cover bg-center transition-all duration-1000 hidden">
+            <h2 class="text-2xl md:text-3xl font-semibold text-white text-shadow z-10 mb-8 text-center px-4">为提升自我能量选择一张指引卡</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl px-4 z-10">
+                <!-- 卡牌1 -->
+                <div class="card-slot card-hover bg-secondary bg-opacity-80 rounded-lg p-6 border-2 border-dark hover:border-accent cursor-pointer transition-all duration-300 flex flex-col items-center justify-center aspect-[3/4]" data-card="energy-1">
+                    <div class="w-full h-full flex flex-col items-center justify-center">
+                        <img src="media/images/41c.jpg" alt="自我能量卡牌1" class="w-3/4 h-3/4 object-contain mb-4">
+                        <p class="text-white text-lg font-medium" style="font-weight: bold; font-size: 20px;">选择这张卡牌</p>
+                    </div>
+                </div>
+                
+                <!-- 卡牌2 -->
+                <div class="card-slot card-hover bg-secondary bg-opacity-80 rounded-lg p-6 border-2 border-dark hover:border-accent cursor-pointer transition-all duration-300 flex flex-col items-center justify-center aspect-[3/4]" data-card="energy-2">
+                    <div class="w-full h-full flex flex-col items-center justify-center">
+                        <img src="media/images/42c.jpg" alt="自我能量卡牌2" class="w-3/4 h-3/4 object-contain mb-4">
+                        <p class="text-white text-lg font-medium" style="font-size: 20px; font-weight: bold;">选择这张卡牌</p>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="back-to-question mt-12 bg-white bg-opacity-20 hover:bg-opacity-30 text-white py-2 px-6 rounded-full transition-all duration-300 z-10 flex items-center">
+                <i class="fa fa-arrow-left mr-2"></i> 返回
+            </button>
+        </section>
+
+        <!-- 声景页 - 情绪1 -->
+        <section id="soundscape-page-emotion-1" class="min-h-screen flex flex-col items-center justify-center bg-cover bg-center transition-all duration-1000 hidden" style="background-image: url('media/images/11b.jpg');">
+            <div class="absolute inset-0 bg-black bg-opacity-30"></div>
+            
+            <div class="w-full max-w-2xl px-4 z-10">
+                <div class="bg-transparent rounded-lg p-6 mb-8">
+                    <h2 class="text-2xl font-light text-white text-shadow mb-4 text-center">
+</h2>
+                    
+                    <!-- 音频控制 -->
+                    <div class="audio-player flex flex-col items-center justify-center">
+
+                        
+                        <div class="flex items-center justify-between bg-white bg-opacity-10 rounded-full px-6 py-4 w-full max-w-md">
+                            <button id="play-btn-emotion-1" class="text-white hover:text-accent transition-colors duration-300 text-3xl w-12 h-12 flex items-center justify-center">
+                                <i class="fa fa-play"></i>
+                            </button>
+                            <div class="volume-control flex items-center flex-1 mx-4">
+                                <i class="fa fa-volume-up text-white mr-3 text-xl"></i>
+                                <input type="range" min="0" max="100" value="80" class="volume-slider w-full h-2">
+                            </div>
+                            <button id="loop-btn-emotion-1" class="text-white hover:text-accent transition-colors duration-300 text-2xl w-10 h-10 flex items-center justify-center">
+                                <i class="fa fa-repeat"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <p class="text-white text-center mt-6" style="font-weight: bold; font-size: 20px;">戴上耳机，感受此刻的声景</p>
+                </div>
+                
+                <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6">
+                    <button id="generate-visual-emotion-1" class="bg-accent hover:bg-opacity-90 text-dark font-medium py-3 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        生成视觉化图片
+                    </button>
+                    <button class="back-to-card bg-white bg-opacity-70 hover:bg-opacity-90 text-dark font-medium py-3 px-8 rounded-full text-lg transition-all duration-300">
+                        返回重新选择
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 隐藏的音频元素 -->
+            <audio id="audio-emotion-1" loop="">
+                <source src="media/audio/11s.mp3" type="audio/mpeg">
+            </audio>
+        </section>
+
+        <!-- 声景页 - 情绪2 -->
+        <section id="soundscape-page-emotion-2" class="min-h-screen flex flex-col items-center justify-center bg-cover bg-center transition-all duration-1000 hidden" style="background-image: url('media/images/12b.jpg');">
+            <div class="absolute inset-0 bg-black bg-opacity-30"></div>
+            
+            <div class="w-full max-w-2xl px-4 z-10">
+                <div class="bg-transparent rounded-lg p-6 mb-8">
+                    <h2 class="text-2xl font-light text-white text-shadow mb-4 text-center">
+</h2>
+                    
+                    <!-- 音频控制 -->
+                    <div class="audio-player flex flex-col items-center justify-center">
+
+                        
+                        <div class="flex items-center justify-between bg-white bg-opacity-10 rounded-full px-6 py-4 w-full max-w-md">
+                            <button id="play-btn-emotion-2" class="text-white hover:text-accent transition-colors duration-300 text-3xl w-12 h-12 flex items-center justify-center">
+                                <i class="fa fa-play"></i>
+                            </button>
+                            <div class="volume-control flex items-center flex-1 mx-4">
+                                <i class="fa fa-volume-up text-white mr-3 text-xl"></i>
+                                <input type="range" min="0" max="100" value="80" class="volume-slider w-full h-2">
+                            </div>
+                            <button id="loop-btn-emotion-2" class="text-white hover:text-accent transition-colors duration-300 text-2xl w-10 h-10 flex items-center justify-center">
+                                <i class="fa fa-repeat"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <p class="text-white text-center mt-6" style="font-weight: bold; font-size: 20px;">戴上耳机，感受此刻的声景</p>
+                </div>
+                
+                <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6">
+                    <button id="generate-visual-emotion-2" class="bg-accent hover:bg-opacity-90 text-dark font-medium py-3 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        生成视觉化图片
+                    </button>
+                    <button class="back-to-card bg-white bg-opacity-70 hover:bg-opacity-90 text-dark font-medium py-3 px-8 rounded-full text-lg transition-all duration-300">
+                        返回重新选择
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 隐藏的音频元素 -->
+            <audio id="audio-emotion-2" loop="">
+                <source src="media/audio/12s.mp3" type="audio/mpeg">
+            </audio>
+        </section>
+
+        <!-- 声景页 - 人际关系1 -->
+        <section id="soundscape-page-relationship-1" class="min-h-screen flex flex-col items-center justify-center bg-cover bg-center transition-all duration-1000 hidden" style="background-image: url('media/images/21b.jpg');">
+            <div class="absolute inset-0 bg-black bg-opacity-30"></div>
+            
+            <div class="w-full max-w-2xl px-4 z-10">
+                <div class="bg-transparent rounded-lg p-6 mb-8">
+                    <h2 class="text-2xl font-light text-white text-shadow mb-4 text-center">
+</h2>
+                    
+                    <!-- 音频控制 -->
+                    <div class="audio-player flex flex-col items-center justify-center">
+
+                        
+                        <div class="flex items-center justify-between bg-white bg-opacity-10 rounded-full px-6 py-4 w-full max-w-md">
+                            <button id="play-btn-relationship-1" class="text-white hover:text-accent transition-colors duration-300 text-3xl w-12 h-12 flex items-center justify-center">
+                                <i class="fa fa-play"></i>
+                            </button>
+                            <div class="volume-control flex items-center flex-1 mx-4">
+                                <i class="fa fa-volume-up text-white mr-3 text-xl"></i>
+                                <input type="range" min="0" max="100" value="80" class="volume-slider w-full h-2">
+                            </div>
+                            <button id="loop-btn-relationship-1" class="text-white hover:text-accent transition-colors duration-300 text-2xl w-10 h-10 flex items-center justify-center">
+                                <i class="fa fa-repeat"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <p class="text-white text-center mt-6" style="font-weight: bold; font-size: 20px;">戴上耳机，感受此刻的声景</p>
+                </div>
+                
+                <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6">
+                    <button id="generate-visual-relationship-1" class="bg-accent hover:bg-opacity-90 text-dark font-medium py-3 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        生成视觉化图片
+                    </button>
+                    <button class="back-to-card bg-white bg-opacity-70 hover:bg-opacity-90 text-dark font-medium py-3 px-8 rounded-full text-lg transition-all duration-300">
+                        返回重新选择
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 隐藏的音频元素 -->
+            <audio id="audio-relationship-1" loop="">
+                <source src="media/audio/21s.mp3" type="audio/mpeg">
+            </audio>
+        </section>
+
+        <!-- 声景页 - 人际关系2 -->
+        <section id="soundscape-page-relationship-2" class="min-h-screen flex flex-col items-center justify-center bg-cover bg-center transition-all duration-1000 hidden" style="background-image: url('media/images/22b.jpg');">
+            <div class="absolute inset-0 bg-black bg-opacity-30"></div>
+            
+            <div class="w-full max-w-2xl px-4 z-10">
+                <div class="bg-transparent rounded-lg p-6 mb-8">
+                    <h2 class="text-2xl font-light text-white text-shadow mb-4 text-center">
+</h2>
+                    
+                    <!-- 音频控制 -->
+                    <div class="audio-player flex flex-col items-center justify-center">
+
+                        
+                        <div class="flex items-center justify-between bg-white bg-opacity-10 rounded-full px-6 py-4 w-full max-w-md">
+                            <button id="play-btn-relationship-2" class="text-white hover:text-accent transition-colors duration-300 text-3xl w-12 h-12 flex items-center justify-center">
+                                <i class="fa fa-play"></i>
+                            </button>
+                            <div class="volume-control flex items-center flex-1 mx-4">
+                                <i class="fa fa-volume-up text-white mr-3 text-xl"></i>
+                                <input type="range" min="0" max="100" value="80" class="volume-slider w-full h-2">
+                            </div>
+                            <button id="loop-btn-relationship-2" class="text-white hover:text-accent transition-colors duration-300 text-2xl w-10 h-10 flex items-center justify-center">
+                                <i class="fa fa-repeat"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <p class="text-white text-center mt-6" style="font-weight: bold; font-size: 20px;">戴上耳机，感受此刻的声景</p>
+                </div>
+                
+                <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6">
+                    <button id="generate-visual-relationship-2" class="bg-accent hover:bg-opacity-90 text-dark font-medium py-3 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        生成视觉化图片
+                    </button>
+                    <button class="back-to-card bg-white bg-opacity-70 hover:bg-opacity-90 text-dark font-medium py-3 px-8 rounded-full text-lg transition-all duration-300">
+                        返回重新选择
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 隐藏的音频元素 -->
+            <audio id="audio-relationship-2" loop="">
+                <source src="media/audio/22s.mp3" type="audio/mpeg">
+            </audio>
+        </section>
+
+        <!-- 声景页 - 生活1 -->
+        <section id="soundscape-page-life-1" class="min-h-screen flex flex-col items-center justify-center bg-cover bg-center transition-all duration-1000 hidden" style="background-image: url('media/images/31b.jpg');">
+            <div class="absolute inset-0 bg-black bg-opacity-30"></div>
+            
+            <div class="w-full max-w-2xl px-4 z-10">
+                <div class="bg-transparent rounded-lg p-6 mb-8">
+                    <h2 class="text-2xl font-light text-white text-shadow mb-4 text-center">
+</h2>
+                    
+                    <!-- 音频控制 -->
+                    <div class="audio-player flex flex-col items-center justify-center">
+
+                        
+                        <div class="flex items-center justify-between bg-white bg-opacity-10 rounded-full px-6 py-4 w-full max-w-md">
+                            <button id="play-btn-life-1" class="text-white hover:text-accent transition-colors duration-300 text-3xl w-12 h-12 flex items-center justify-center">
+                                <i class="fa fa-play"></i>
+                            </button>
+                            <div class="volume-control flex items-center flex-1 mx-4">
+                                <i class="fa fa-volume-up text-white mr-3 text-xl"></i>
+                                <input type="range" min="0" max="100" value="80" class="volume-slider w-full h-2">
+                            </div>
+                            <button id="loop-btn-life-1" class="text-white hover:text-accent transition-colors duration-300 text-2xl w-10 h-10 flex items-center justify-center">
+                                <i class="fa fa-repeat"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <p class="text-white text-center mt-6" style="font-weight: bold; font-size: 20px;">戴上耳机，感受此刻的声景</p>
+                </div>
+                
+                <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6">
+                    <button id="generate-visual-life-1" class="bg-accent hover:bg-opacity-90 text-dark font-medium py-3 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        生成视觉化图片
+                    </button>
+                    <button class="back-to-card bg-white bg-opacity-70 hover:bg-opacity-90 text-dark font-medium py-3 px-8 rounded-full text-lg transition-all duration-300">
+                        返回重新选择
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 隐藏的音频元素 -->
+            <audio id="audio-life-1" loop="">
+                <source src="media/audio/31s.mp3" type="audio/mpeg">
+            </audio>
+        </section>
+
+        <!-- 声景页 - 生活2 -->
+        <section id="soundscape-page-life-2" class="min-h-screen flex flex-col items-center justify-center bg-cover bg-center transition-all duration-1000 hidden" style="background-image: url('media/images/32b.jpg');">
+            <div class="absolute inset-0 bg-black bg-opacity-30"></div>
+            
+            <div class="w-full max-w-2xl px-4 z-10">
+                <div class="bg-transparent rounded-lg p-6 mb-8">
+                    <h2 class="text-2xl font-light text-white text-shadow mb-4 text-center">
+</h2>
+                    
+                    <!-- 音频控制 -->
+                    <div class="audio-player flex flex-col items-center justify-center">
+
+                        
+                        <div class="flex items-center justify-between bg-white bg-opacity-10 rounded-full px-6 py-4 w-full max-w-md">
+                            <button id="play-btn-life-2" class="text-white hover:text-accent transition-colors duration-300 text-3xl w-12 h-12 flex items-center justify-center">
+                                <i class="fa fa-play"></i>
+                            </button>
+                            <div class="volume-control flex items-center flex-1 mx-4">
+                                <i class="fa fa-volume-up text-white mr-3 text-xl"></i>
+                                <input type="range" min="0" max="100" value="80" class="volume-slider w-full h-2">
+                            </div>
+                            <button id="loop-btn-life-2" class="text-white hover:text-accent transition-colors duration-300 text-2xl w-10 h-10 flex items-center justify-center">
+                                <i class="fa fa-repeat"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <p class="text-white text-center mt-6" style="font-weight: bold; font-size: 20px;">戴上耳机，感受此刻的声景</p>
+                </div>
+                
+                <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6">
+                    <button id="generate-visual-life-2" class="bg-accent hover:bg-opacity-90 text-dark font-medium py-3 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        生成视觉化图片
+                    </button>
+                    <button class="back-to-card bg-white bg-opacity-70 hover:bg-opacity-90 text-dark font-medium py-3 px-8 rounded-full text-lg transition-all duration-300">
+                        返回重新选择
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 隐藏的音频元素 -->
+            <audio id="audio-life-2" loop="">
+                <source src="media/audio/32s.mp3" type="audio/mpeg">
+            </audio>
+        </section>
+
+        <!-- 声景页 - 能量1 -->
+        <section id="soundscape-page-energy-1" class="min-h-screen flex flex-col items-center justify-center bg-cover bg-center transition-all duration-1000 hidden" style="background-image: url('media/images/41b.jpg');">
+            <div class="absolute inset-0 bg-black bg-opacity-30"></div>
+            
+            <div class="w-full max-w-2xl px-4 z-10">
+                <div class="bg-transparent rounded-lg p-6 mb-8">
+                    <h2 class="text-2xl font-light text-white text-shadow mb-4 text-center">
+</h2>
+                    
+                    <!-- 音频控制 -->
+                    <div class="audio-player flex flex-col items-center justify-center">
+
+                        
+                        <div class="flex items-center justify-between bg-white bg-opacity-10 rounded-full px-6 py-4 w-full max-w-md">
+                            <button id="play-btn-energy-1" class="text-white hover:text-accent transition-colors duration-300 text-3xl w-12 h-12 flex items-center justify-center">
+                                <i class="fa fa-play"></i>
+                            </button>
+                            <div class="volume-control flex items-center flex-1 mx-4">
+                                <i class="fa fa-volume-up text-white mr-3 text-xl"></i>
+                                <input type="range" min="0" max="100" value="80" class="volume-slider w-full h-2">
+                            </div>
+                            <button id="loop-btn-energy-1" class="text-white hover:text-accent transition-colors duration-300 text-2xl w-10 h-10 flex items-center justify-center">
+                                <i class="fa fa-repeat"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <p class="text-white text-center mt-6" style="font-weight: bold; font-size: 20px;">戴上耳机，感受此刻的声景</p>
+                </div>
+                
+                <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6">
+                    <button id="generate-visual-energy-1" class="bg-accent hover:bg-opacity-90 text-dark font-medium py-3 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        生成视觉化图片
+                    </button>
+                    <button class="back-to-card bg-white bg-opacity-70 hover:bg-opacity-90 text-dark font-medium py-3 px-8 rounded-full text-lg transition-all duration-300">
+                        返回重新选择
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 隐藏的音频元素 -->
+            <audio id="audio-energy-1" loop="">
+                <source src="media/audio/41s.mp3" type="audio/mpeg">
+            </audio>
+        </section>
+
+        <!-- 声景页 - 能量2 -->
+        <section id="soundscape-page-energy-2" class="min-h-screen flex flex-col items-center justify-center bg-cover bg-center transition-all duration-1000 hidden" style="background-image: url('media/images/42b.jpg');">
+            <div class="absolute inset-0 bg-black bg-opacity-30"></div>
+            
+            <div class="w-full max-w-2xl px-4 z-10">
+                <div class="bg-transparent rounded-lg p-6 mb-8">
+                    <h2 class="text-2xl font-light text-white text-shadow mb-4 text-center">
+</h2>
+                    
+                    <!-- 音频控制 -->
+                    <div class="audio-player flex flex-col items-center justify-center">
+
+                        
+                        <div class="flex items-center justify-between bg-white bg-opacity-10 rounded-full px-6 py-4 w-full max-w-md">
+                            <button id="play-btn-energy-2" class="text-white hover:text-accent transition-colors duration-300 text-3xl w-12 h-12 flex items-center justify-center">
+                                <i class="fa fa-play"></i>
+                            </button>
+                            <div class="volume-control flex items-center flex-1 mx-4">
+                                <i class="fa fa-volume-up text-white mr-3 text-xl"></i>
+                                <input type="range" min="0" max="100" value="80" class="volume-slider w-full h-2">
+                            </div>
+                            <button id="loop-btn-energy-2" class="text-white hover:text-accent transition-colors duration-300 text-2xl w-10 h-10 flex items-center justify-center">
+                                <i class="fa fa-repeat"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <p class="text-white text-center mt-6" style="font-weight: bold; font-size: 20px;">戴上耳机，感受此刻的声景</p>
+                </div>
+                
+                <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6">
+                    <button id="generate-visual-energy-2" class="bg-accent hover:bg-opacity-90 text-dark font-medium py-3 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        生成视觉化图片
+                    </button>
+                    <button class="back-to-card bg-white bg-opacity-70 hover:bg-opacity-90 text-dark font-medium py-3 px-8 rounded-full text-lg transition-all duration-300">
+                        返回重新选择
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 隐藏的音频元素 -->
+            <audio id="audio-energy-2" loop="">
+                <source src="media/audio/42s.mp3" type="audio/mpeg">
+            </audio>
+        </section>
+
+        <!-- 视觉化页 -->
+        <section id="visualization-page" class="min-h-screen flex flex-col items-center justify-center bg-light transition-all duration-1000 hidden">
+            <div class="w-full max-w-4xl px-4 py-8">
+                <h2 class="text-2xl md:text-3xl font-semibold text-dark mb-8 text-center">你的专属声景可视化图</h2>
+                
+                <div class="visualization-container bg-white rounded-lg shadow-lg p-4 mb-8">
+                    <div id="visualization-canvas" class="w-full h-96 md:h-[500px] bg-cover bg-center rounded-md" style="background-image: url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/7f5b28034bd4483385f9b9bc93f565e9~tplv-a9rns2rl98-image.image?rcl=20251119195610ACC4B2BA78C2C17E7DC1&amp;rk3s=8e244e95&amp;rrcfp=f06b921b&amp;x-expires=1766145405&amp;x-signature=cgKwZjtsyhuU3zVYfxRR3egUr9k%3D');">
+                        <!-- 视觉化内容将在这里动态生成 -->
+                    </div>
+                </div>
+                
+                <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6">
+                    <button id="download-image" class="bg-primary hover:bg-opacity-90 text-white font-medium py-3 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        下载图片
+                    </button>
+                    <button id="back-to-soundscape" class="bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white font-medium py-3 px-8 rounded-full text-lg transition-all duration-300">
+                        返回首页
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 页面切换函数
+            function showPage(pageId) {
+                // 隐藏所有页面
+                document.querySelectorAll('section').forEach(section => {
+                    section.classList.add('hidden');
+                });
+                
+                // 显示目标页面
+                const targetPage = document.getElementById(pageId);
+                if (targetPage) {
+                    targetPage.classList.remove('hidden');
+                    
+                    // 添加淡入动画
+                    gsap.fromTo(targetPage, 
+                        { opacity: 0 }, 
+                        { opacity: 1, duration: 1 }
+                    );
+                }
+            }
+            
+            // 存储当前页面状态
+            let currentState = {
+                option: null,
+                card: null
+            };
+            
+            // 存储当前视觉化图片URL
+            let currentVisualizationUrl = '';
+            
+            // 欢迎页 -> 询问页
+            document.getElementById('start-btn').addEventListener('click', function() {
+                showPage('question-page');
+            });
+            
+            // 询问页 -> 欢迎页
+            document.getElementById('back-to-welcome').addEventListener('click', function() {
+                showPage('welcome-page');
+            });
+            
+            // 询问页 -> 卡牌页
+            document.querySelectorAll('.option-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const option = this.getAttribute('data-option');
+                    currentState.option = option;
+                    showPage(`card-page-${option}`);
+                });
+            });
+            
+            // 卡牌页 -> 询问页
+            document.querySelectorAll('.back-to-question').forEach(button => {
+                button.addEventListener('click', function() {
+                    showPage('question-page');
+                });
+            });
+            
+            // 卡牌页 -> 声景页
+            document.querySelectorAll('.card-slot').forEach(slot => {
+                slot.addEventListener('click', function() {
+                    const card = this.getAttribute('data-card');
+                    currentState.card = card;
+                    showPage(`soundscape-page-${card}`);
+                });
+            });
+            
+            // 声景页 -> 卡牌页
+            document.querySelectorAll('.back-to-card').forEach(button => {
+                button.addEventListener('click', function() {
+                    if (currentState.option) {
+                        showPage(`card-page-${currentState.option}`);
+                    }
+                });
+            });
+            
+            // 声景页 -> 视觉化页
+            const generateButtons = document.querySelectorAll('[id^="generate-visual-"]');
+            generateButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    showPage('visualization-page');
+                    generateVisualization();
+                });
+            });
+            
+            // 视觉化页 -> 声景页
+            document.getElementById('back-to-soundscape').addEventListener('click', function() {
+                showPage('welcome-page');
+            });
+            
+            // 音频播放控制
+            const playButtons = document.querySelectorAll('[id^="play-btn-"]');
+            playButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.id.split('-').slice(2).join('-');
+                    const audio = document.getElementById(`audio-${id}`);
+                    const icon = this.querySelector('i');
+                    
+                    if (audio.paused) {
+                        audio.play();
+                        icon.classList.remove('fa-play');
+                        icon.classList.add('fa-pause');
+                    } else {
+                        audio.pause();
+                        icon.classList.remove('fa-pause');
+                        icon.classList.add('fa-play');
+                    }
+                });
+            });
+            
+            // 循环播放控制
+            const loopButtons = document.querySelectorAll('[id^="loop-btn-"]');
+            loopButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.id.split('-').slice(2).join('-');
+                    const audio = document.getElementById(`audio-${id}`);
+                    const icon = this.querySelector('i');
+                    
+                    audio.loop = !audio.loop;
+                    if (audio.loop) {
+                        icon.classList.add('text-accent');
+                    } else {
+                        icon.classList.remove('text-accent');
+                    }
+                });
+            });
+            
+            // 音量控制 - 修复：只控制当前页面的音频
+            const volumeSliders = document.querySelectorAll('.volume-slider');
+            volumeSliders.forEach(slider => {
+                slider.addEventListener('input', function() {
+                    const volume = this.value / 100;
+                    // 只设置当前页面内的音频音量
+                    const currentPage = this.closest('section');
+                    const audio = currentPage.querySelector('audio');
+                    if (audio) {
+                        audio.volume = volume;
+                    }
+                });
+            });
+            
+            // 生成视觉化图片
+            function generateVisualization() {
+                // 在实际应用中，这里会根据音频生成视觉化效果
+                // 这里我们使用预设的图片作为示例
+                const visualizationCanvas = document.getElementById('visualization-canvas');
+                
+                // 根据当前选择的卡牌生成对应的视觉效果
+                const visualizations = {
+                    'emotion-1': 'media/images/11p.jpg', // 平静之心
+                    'emotion-2': 'media/images/12p.jpg', // 情绪释放
+                    'relationship-1': 'media/images/21p.jpg', // 有效沟通
+                    'relationship-2': 'media/images/22p.jpg', // 边界建立
+                    'life-1': 'media/images/31p.jpg', // 压力管理
+                    'life-2': 'media/images/32p.jpg', // 生活平衡
+                    'energy-1': 'media/images/41p.jpg', // 内在平静
+                    'energy-2': 'media/images/42p.jpg' // 活力焕发
+                };
+                
+                // 获取当前选择的卡牌对应的视觉效果
+                const visual = visualizations[currentState.card] || visualizations['emotion-1'];
+                currentVisualizationUrl = visual;
+                
+                // 应用视觉效果
+                visualizationCanvas.style.backgroundImage = `url('${visual}')`;
+                
+                // 添加动画效果
+                gsap.fromTo(visualizationCanvas, 
+                    { scale: 0.9, opacity: 0 }, 
+                    { scale: 1, opacity: 1, duration: 1 }
+                );
+            }
+            
+            // 下载图片 - 修复：使用当前视觉化图片URL
+            document.getElementById('download-image').addEventListener('click', function() {
+                if (!currentVisualizationUrl) {
+                    alert('请先生成视觉化图片');
+                    return;
+                }
+                
+                // 创建下载链接
+                const link = document.createElement('a');
+                link.href = currentVisualizationUrl;
+                link.download = '声景疗愈视觉化.jpg';
+                
+                // 添加时间戳以避免缓存问题
+                link.href += '?t=' + new Date().getTime();
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+            
+            // 初始化显示欢迎页
+            showPage('welcome-page');
+        });
+    </script>
+
+</body></html>
